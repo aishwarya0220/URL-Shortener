@@ -36,3 +36,8 @@ Phase 4 (Cloud Deployment): Deploy it to a cloud provider using a virtual machin
 - linux case-sensitivity issues
 
 - port mapping conflict combined with multiple mongodb instances. compass unable to read data from container since both using same port(27017). thus 27018(host):27017(container)
+
+
+# Prisma - Issues faced
+
+- Port clashes between locally installed postgresql and containerized postgresql

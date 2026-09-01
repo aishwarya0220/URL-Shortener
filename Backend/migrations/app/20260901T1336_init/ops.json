@@ -1,0 +1,100 @@
+[
+  {
+    "id": "schema.public",
+    "label": "Create schema \"public\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres"
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "Create schema \"public\"",
+        "sql": "CREATE SCHEMA IF NOT EXISTS \"public\"",
+        "params": []
+      }
+    ],
+    "postcheck": []
+  },
+  {
+    "id": "table.link",
+    "label": "Create table \"link\"",
+    "summary": "Creates table \"link\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "link"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"link\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"link\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"link\"",
+        "sql": "CREATE TABLE \"public\".\"link\" (\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"longUrl\" text NOT NULL,\n  \"shortCode\" text NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"link\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"link\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.link.link_shortCode_key",
+    "label": "Add unique constraint on \"link\" (shortCode)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "link_shortCode_key",
+        "table": "link"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"link_shortCode_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "link_shortCode_key",
+          "public",
+          "\"public\".\"link\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"link_shortCode_key\"",
+        "sql": "ALTER TABLE \"public\".\"link\" ADD CONSTRAINT \"link_shortCode_key\" UNIQUE (\"shortCode\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"link_shortCode_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "link_shortCode_key",
+          "public",
+          "\"public\".\"link\""
+        ]
+      }
+    ]
+  }
+]

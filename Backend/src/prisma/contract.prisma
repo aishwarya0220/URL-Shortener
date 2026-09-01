@@ -1,0 +1,8 @@
+// use prisma-next
+
+model Link {
+  id Int @id @default(autoincrement())
+  shortCode String @unique
+  longUrl String 
+  createdAt TimestamptzString @default(now())
+}

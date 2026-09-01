@@ -1,7 +1,7 @@
 name: url-shortener
 
 services:
-  postgresql:
+  postgres:
     image: postgres:16
     container_name: postgres
     restart: unless-stopped
