@@ -41,3 +41,12 @@ Phase 4 (Cloud Deployment): Deploy it to a cloud provider using a virtual machin
 # Prisma - Issues faced
 
 - Port clashes between locally installed postgresql and containerized postgresql
+
+
+
+
+
+
+# Decisions taken
+
+- Cryptographically secure random number used for base62 encoding instead of id(bcoz of predictability). helps avoid circularity of Need shortCode to create Link -> Need ID to generate shortCode -> ID is generated when Link is created. Initially thought of first keeping shortcode as null then update after getting id but rejected due to unnecessary intermediary operation and Atomicity concerns.
