@@ -1,13 +1,13 @@
 const alphabet = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-export default function encoded(num: number){
-    if(num === 0) return
+export default function encoded(bytes: Buffer): string{
+    let result = "";
 
-    let encoded = ''
+  for (const byte of bytes) {
+    if (byte >= 248) continue; // Avoid modulo bias
 
-    while(num > 0){
-        encoded = alphabet[num%62] + encoded
-        num = Math.floor(num / 62)
-    }
-    return encoded
+    result += alphabet[byte % 62];
+  }
+
+  return result;
 }
