@@ -42,6 +42,7 @@ Phase 4 (Cloud Deployment): Deploy it to a cloud provider using a virtual machin
 
 - Port clashes between locally installed postgresql and containerized postgresql
 
+- Prisma v8 but prisma/client v8 not released so issues in cross-compatibility 
 
 
 

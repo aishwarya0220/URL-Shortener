@@ -13,7 +13,6 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "@prisma/client": "^7.10.0",
     "@prisma/orm-postgres": "^8.0.0-rc.8",
     "@types/express": "^5.0.6",
     "cors": "^2.8.6",
@@ -23,6 +22,7 @@
   },
   "devDependencies": {
     "@prisma/cli-engine": "^0.2.3",
+    "@prisma/client": "^7.10.0",
     "@types/node": "^26.4.0",
     "prisma": "^8.0.0-rc.10",
     "ts-node-dev": "^2.0.0"

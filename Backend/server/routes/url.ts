@@ -1,10 +1,10 @@
 const express = require('express')
 
-const router = express.router()
+const router = express.Router()
 
-const { PrismaClient } = require('@prisma/client')
+const { db } = require('../../src/prisma/db')
 
-const prisma = new PrismaClient()
+const { generateShortCode } = require('../services/generateShortCode')
 
 router.post('/', async(req, res) => {
     try{
@@ -14,12 +14,17 @@ router.post('/', async(req, res) => {
             return res.status(400).json({ error: 'URL is required to be filled'})
         }
 
-        const newUrl = await prisma.Link.create({
+        const shortUrl = generateShortCode()
+
+        const newEntry = await db.orm.public.Link.create({
             data: {
-                longUrl: url
+                longUrl: url,
+                shortCode: shortUrl
             }
         })
 
-        res.status(201).json('')
+        res.status(201).json('Changes made to the DB')
+    } catch(err){
+        console.log({error: `post method failed`, err})
     }
 })
