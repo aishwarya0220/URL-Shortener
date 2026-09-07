@@ -1,4 +1,4 @@
-import { encoded } from "../utils/encode";
+import encoded from "../utils/encode";
 
 import randomBytes from "./randomBytes";
 

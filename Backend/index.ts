@@ -1,16 +1,18 @@
-const express = require('express')
+import express from 'express'
 
 const app = express()
 
-const post = require('./server/routes/url')
+import router from '../Backend/server/routes/url'
 
-require('dotenv').config()
+import 'dotenv/config'
+
+app.use(express.json())
 
 app.get('/', (req, res) => {
     res.send('This is the homepage')
 })
 
-app.use('/post', post)
+app.use('/post', router)
 
 app.listen(process.env.PORT, () => {
     console.log(`Server is running on port ${process.env.PORT}`)

@@ -44,7 +44,21 @@ Phase 4 (Cloud Deployment): Deploy it to a cloud provider using a virtual machin
 
 - Prisma v8 but prisma/client v8 not released so issues in cross-compatibility 
 
+# Node - Issues faced
 
+- Outdated Development Tools(ts-node-dev) vs. Modern TypeScript(tsx) 
+
+    ts-node-dev -- ts-node-dev is a tool built on top of ts-node and node-dev. It spawns a child process and restarts it whenever a  file changes. It hooks into the official TypeScript compiler (tsc).  It includes full type-checking by default. While safe, this makes it significantly slower as your codebase grows
+
+    tsx --  Instead of compiling code via tsc, it uses esbuild, an extremely fast loader written in Go. It completely bypasses type-checking and simply strips the types out of your code to execute it instantly.  It has effectively replaced ts-node-dev for modern Node.js workflows. For type checking, most developers now rely on their code editors (like VS Code) or run tsc --noEmit as a separate step in their CI/CD pipelines
+
+- Mixing require() and import (CommonJS vs. ESM)
+
+    The Error: TypeError: argument handler must be a function at app.use()
+
+    What happened: mixed old CommonJS syntax (require) with modern ES module setups. When you require() a file that uses modern exports, Node doesn't return the raw router function; instead, it returns a wrapper object (like { default: [Function] }) or undefined. Because app.use() expects a raw function, it crashes.
+
+    The Takeaway: Stick to one module system consistently. Since you are using modern TypeScript, use import and export default everywhere instead of require() and module.exports
 
 
 
