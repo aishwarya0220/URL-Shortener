@@ -5,6 +5,7 @@ const router = express.Router()
 import { db } from '../../src/prisma/db'
 
 import { generateShortCode } from '../services/generateShortCode'
+import { setCachedUrl } from '../utils/redis'
 
 router.post('/', async(req, res) => {
     try{
@@ -23,7 +24,9 @@ router.post('/', async(req, res) => {
                 shortCode: shortUrl
         })
 
-        res.status(201).json('URL entry made to the DB')
+        await setCachedUrl(shortUrl, url)
+
+        res.status(201).json(shortUrl)
     } catch(err){
         console.log({error: `post method failed`, err})
     }
