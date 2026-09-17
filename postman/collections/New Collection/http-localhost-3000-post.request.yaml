@@ -1,0 +1,43 @@
+$kind: http-request
+name: http://localhost:3000/post
+description: ""
+url: http://localhost:3000/post
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \    \"url\": \"https://chatgpt.com/\"\r
+
+    }"
+scripts:
+  - type: afterResponse
+    code: "// 1. Grab the \"url\" value from the JSON body you sent\r
+
+      var requestBody = JSON.parse(pm.request.body.raw);\r
+
+      pm.collectionVariables.set(\"originalLongUrl\", requestBody.url);\r
+
+      \r
+
+      // 2. Grab the base62 short code returned by your app (res.status(201).json(shortUrl))\r
+
+      var shortCode = pm.response.json();\r
+
+      pm.collectionVariables.set(\"shortCode\", shortCode);\r
+
+      \r
+
+      // 3. Assertions\r
+
+      pm.test(\"Short link created successfully\", function () {\r
+
+      \    pm.response.to.have.status(201);\r
+
+      \    pm.expect(pm.collectionVariables.get(\"originalLongUrl\")).to.not.be.undefined;\r
+
+      });"
+    language: text/javascript
+settings:
+  followRedirects: false
+order: 771553993255

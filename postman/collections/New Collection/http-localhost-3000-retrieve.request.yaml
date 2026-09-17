@@ -1,0 +1,45 @@
+$kind: http-request
+name: http://localhost:3000/retrieve
+description: ""
+url: http://localhost:3000/retrieve/{{shortCode}}
+method: GET
+body:
+  type: json
+  content: "{\r
+
+    \    \"url\": \"https://chatgpt.com/\"\r
+
+    }"
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Status code is 302 redirect\", function () {\r
+
+      \    pm.response.to.have.status(302);\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Location header matches original URL\", function () {\r
+
+      \    var targetUrl = pm.response.headers.get(\"Location\");\r
+
+      \    var expectedUrl = pm.collectionVariables.get(\"originalLongUrl\");\r
+
+      \r
+
+      \    // Remove trailing slashes to prevent minor formatting mismatches\r
+
+      \    var cleanTarget = targetUrl ? targetUrl.replace(/\\/$/, \"\") : \"\";\r
+
+      \    var cleanExpected = expectedUrl ? expectedUrl.replace(/\\/$/, \"\") : \"\";\r
+
+      \r
+
+      \    pm.expect(cleanTarget).to.eql(cleanExpected);\r
+
+      });"
+    language: text/javascript
+settings:
+  followRedirects: false
+order: 1789652626281

@@ -60,8 +60,11 @@ Phase 4 (Cloud Deployment): Deploy it to a cloud provider using a virtual machin
 
     The Takeaway: Stick to one module system consistently. Since you are using modern TypeScript, use import and export default everywhere instead of require() and module.exports
 
+# Postman test scripts -
 
+Ran the entire workflow of post and get using scripts and collections. Helped in identifying the bug of bad/wrong urls (eg. url: not-a-url-at-all) and thus added a urlValidation logic in node.
 
 # Decisions taken
 
 - Cryptographically secure random number used for base62 encoding instead of id(bcoz of predictability). helps avoid circularity of Need shortCode to create Link -> Need ID to generate shortCode -> ID is generated when Link is created. Initially thought of first keeping shortcode as null then update after getting id but rejected due to unnecessary intermediary operation and Atomicity concerns.
+
