@@ -15,24 +15,24 @@ jobs:
         node-version: [20.x, 22.x]
 
     steps:
-    # 1. Pull your repository code into the CI runner
     - name: Checkout Repository
       uses: actions/checkout@v4
 
-    # 2. Setup Node.js environment
     - name: Set up Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+        cache-dependency-path: Backend/package-lock.json # Point to lockfile if in subfolder
 
-    # 3. Install dependencies cleanly
+    # Point actions to run inside your Backend folder
     - name: Install Dependencies
-      run: npm install
+      run: npm ci
+      working-directory: ./Backend
 
-    # 4. Run your Jest test suite
     - name: Run Test Suite
       run: npm test
+      working-directory: ./Backend
       env:
         PORT: 3000
         DATABASE_URL: "postgresql://user:password@localhost:5432/mydb"
