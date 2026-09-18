@@ -10,7 +10,8 @@
     "module": "preserve",
     "target": "esnext",
     "types": [
-      "node"
+      "node",
+      "jest"
     ],
     // For nodejs:
     // "lib": ["esnext"],
@@ -38,11 +39,18 @@
     "strict": true,
     "jsx": "react-jsx",
     "verbatimModuleSyntax": true,
+    "esModuleInterop": true,
     "isolatedModules": true,
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "skipLibCheck": true,
     "moduleResolution": "bundler",
+    "baseUrl": ".",
+    "paths": {
+      "@prisma/*": ["src/prisma/*"],
+      "@utils/*": ["server/utils/*"]
+    },
     "resolveJsonModule": true,
-  }
+  },
+  "include": ["src/**/*", "server/**/*"]
 }

@@ -1,35 +1,32 @@
 import express from 'express'
-
 const router = express.Router()
-
-import { db } from '../../src/prisma/db'
-
+import { db } from '@prisma/db'
 import { generateShortCode } from '../services/generateShortCode'
-import { setCachedUrl } from '../utils/redis'
+import { setCachedUrl } from '@utils/redis'
 
-router.post('/', async(req, res) => {
-    try{
-        const { url } = req.body
-
+router.post('/', async (req, res) => {
+    try {
+        const { longUrl } = req.body
         console.log('incoming body:', req.body)
 
-        if(!url){
-            return res.status(400).json({ error: 'URL is required to be filled'})
+        if (!longUrl) {
+            return res.status(400).json({ error: 'URL is required to be filled' })
         }
 
         const shortUrl = generateShortCode()
 
-        const newEntry = await db.orm.public.Link.create({
-                longUrl: url,
-                shortCode: shortUrl
+        await db.orm.public.Link.create({
+            longUrl: longUrl,
+            shortCode: shortUrl,
         })
 
-        await setCachedUrl(shortUrl, url)
+        await setCachedUrl(shortUrl, longUrl)
 
-        res.status(201).json(shortUrl)
-    } catch(err){
-        console.log({error: `post method failed`, err})
+        return res.status(201).json({ shortCode: shortUrl })
+    } catch (err) {
+        console.log({ error: `post method failed`, err })
+        return res.status(500).json({ error: 'Internal server error' }) // <-- CRITICAL: Prevents request hanging
     }
 })
 
-export default router
+export default router;

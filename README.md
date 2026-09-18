@@ -64,6 +64,21 @@ Phase 4 (Cloud Deployment): Deploy it to a cloud provider using a virtual machin
 
 Ran the entire workflow of post and get using scripts and collections. Helped in identifying the bug of bad/wrong urls (eg. url: not-a-url-at-all) and thus added a urlValidation logic in node.
 
+# App issues faced 
+
+variable name mismatch (longUrl and url). frontend sent json with key -> longUrl but backend expected url thus keys didnt match and was request was treated as empty.
+
+# Testing(Supertest) issues faced
+
+Exception Hangs in Asynchronous Route Handlers - every single incoming request must be terminated by sending a response or passing ctrl to middleware. missed res.json & only logged o/p thereby tcp sockets remained open. ["I ran into a silent request-hanging bug where async route errors were caught and logged, but no response was sent back to the client. This taught me the importance of the Express lifecycle: every code path—especially error handlers—must explicitly terminate the request cycle with a status code and a JSON response (like res.status(500).json(...)) or pass the error to next(err) to prevent hanging test suites."]
+
+Jest mock resoln and string mismatch - [Jest mock matching is strictly string-sensitive. When our route files and test files used mismatched relative traversal paths (../../ vs ../), Jest couldn't reconcile the module identifiers, causing mocks to silently fail. I fixed this by implementing centralized path aliases (@prisma/*) mapped cleanly across TypeScript (tsconfig.json) and Jest (moduleNameMapper), ensuring every file references modules through a uniform identifier]
+
+ESM interoperablt in commonjs test runners - Node's test execution worker thread struggled to parse modern module syntax natively without explicit compilation or transform rules, causing mysterious runtime syntax crashes. [Bridging modern ESM packages with traditional testing pipelines can cause compilation friction. I had to explicitly configure ts-jest's transformation rules to handle .mjs extensions and adjust transform-ignore patterns so that modern third-party package syntax compiles smoothly within our test runner environment]
+
+Mixing Server Initialization with Application Logic - [learned to strictly decouple the Application Factory from the Server Bootstrap. app.ts should only configure middleware, routers, and export a headless Express app instance. index.ts (or server.ts) imports that app, binds environment variables, connects to external services like Redis, and calls app.listen(). This separation makes the app entirely testable in isolation.], 
+Why shouldn't you put app.listen() inside your main app file? - [Because it couples application configuration with network infrastructure. If app.listen() executes on import, test runners like Supertest cannot load the app in isolation without accidentally opening ports and triggering background network connections, which leads to test timeouts and open-handle memory leaks]
+
 # Decisions taken
 
 - Cryptographically secure random number used for base62 encoding instead of id(bcoz of predictability). helps avoid circularity of Need shortCode to create Link -> Need ID to generate shortCode -> ID is generated when Link is created. Initially thought of first keeping shortcode as null then update after getting id but rejected due to unnecessary intermediary operation and Atomicity concerns.

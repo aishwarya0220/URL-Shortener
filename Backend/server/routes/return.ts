@@ -1,8 +1,8 @@
 import express from 'express'
 
-import { db } from '../../src/prisma/db'
+import { db } from '@prisma/db'
 
-import { getCachedUrl, setCachedUrl } from '../utils/redis'
+import { getCachedUrl, setCachedUrl } from '@utils/redis'
 
 const router = express.Router()
 
