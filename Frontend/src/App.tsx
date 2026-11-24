@@ -59,7 +59,7 @@ function App() {
         return;
       }
 
-      setShortUrl(`${data.shortCode}`);
+      setShortUrl(`${API_URL}/retrieve/${data.shortCode}`);
     } catch {
       // fetch only rejects when the server cannot be reached at all
       setError('Could not reach the server. Check your connection and try again.');
