@@ -36,6 +36,23 @@ jest.mock('@prisma/db', () => ({
       expect(response.body).toHaveProperty('error');
     });
   
+    it('should return 400 for an invalid URL in POST /post', async () => {
+      const response = await request(app)
+        .post('/post')
+        .send({ longUrl: 'not-a-url-at-all' });
+
+      expect(response.status).toBe(400);
+      expect(response.body).toHaveProperty('error');
+    });
+
+    it('should reject non-http URLs like javascript:', async () => {
+      const response = await request(app)
+        .post('/post')
+        .send({ longUrl: 'javascript:alert(1)' });
+
+      expect(response.status).toBe(400);
+    });
+
     it('should create a short code on valid POST /post', async () => {
       const response = await request(app)
         .post('/post')

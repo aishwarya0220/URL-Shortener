@@ -3,14 +3,18 @@ const router = express.Router()
 import { db } from '@prisma/db'
 import { generateShortCode } from '../services/generateShortCode'
 import { setCachedUrl } from '@utils/redis'
+import isValidHttpUrl from '../utils/validateUrl'
 
 router.post('/', async (req, res) => {
     try {
-        const { longUrl } = req.body
-        console.log('incoming body:', req.body)
+        const longUrl = typeof req.body?.longUrl === 'string' ? req.body.longUrl.trim() : ''
 
         if (!longUrl) {
             return res.status(400).json({ error: 'URL is required to be filled' })
+        }
+
+        if (!isValidHttpUrl(longUrl)) {
+            return res.status(400).json({ error: 'Please enter a valid URL starting with http:// or https://' })
         }
 
         const shortUrl = generateShortCode()

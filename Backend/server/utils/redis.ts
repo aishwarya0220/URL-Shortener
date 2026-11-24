@@ -2,7 +2,12 @@ import { createClient } from "redis";
 
 import 'dotenv/config'
 
-const redisClient = createClient({url: process.env.REDIS_URL || 'redis://localhost:6379'})
+// Local: redis://localhost:6379. Upstash: rediss://... (the double "s" turns on TLS automatically)
+// disableOfflineQueue: fail fast when Redis is unreachable instead of making requests wait
+const redisClient = createClient({
+    url: process.env.REDIS_URL || 'redis://localhost:6379',
+    disableOfflineQueue: true
+})
 
 redisClient.on('error', (err) => console.error('Redis client error:', err))
 
